@@ -2,16 +2,16 @@
 
 Notebook + CLI to import the paired sample package **[w4h-sample-fitbit-csv](https://github.com/USC-InfoLab/w4h-sample-fitbit-csv)** into W4H. Credentials stay in a local `.env` (never committed).
 
-**Publisher:** usc-infolab · **Kind:** notebook · **Language:** Python
+**Publisher:** usc-infolab · **Kinds:** notebook, CLI · **Language:** Python
 
-This is the contribution Admins and Users open from **Contributions** to learn how to load Fitbit CSV.
+Admins adapt this notebook to ingest Fitbit CSV. The same repo includes a CLI for scheduled and incremental updates.
 
 ## Who should do what
 
 | Role | What to do |
 |------|------------|
-| **Admin** (team catalog) | Create a dataset, set `W4H_DATASET_ID`, run the notebook or CLI `import` / `sync` into **your team’s** catalog. |
-| **User** | Clone this repo, open the notebook, set your **personal API key**. Against **W4H Samples**, re-run analysis / read data — do **not** `replace` sandbox tables. Ingest only if an Admin delegated that work on your team. |
+| **Admin** | Adapt the notebook for your export shape, then ingest into **your team’s** catalog. Use the CLI (`import` / `sync`) for cron and incremental updates. |
+| **User** | Use analysis contributions against loaded datasets. You cannot add datasets or edit raw tables. |
 | **Super admin** | May seed/replace canonical **W4H Samples** datasets. Everyone else treats sandbox as read. |
 
 ## Prerequisites
