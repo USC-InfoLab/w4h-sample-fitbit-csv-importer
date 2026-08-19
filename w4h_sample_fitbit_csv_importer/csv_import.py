@@ -12,6 +12,10 @@ def _dedupe_columns_for_signal(slug: str) -> list[str]:
         return ["id"]
     if slug == "weight":
         return ["id", "date", "time"]
+    if slug == "heart_rate":
+        return ["id", "date", "timestamp"]
+    if slug == "calories":
+        return ["id", "date", "time"]
     return []
 
 
