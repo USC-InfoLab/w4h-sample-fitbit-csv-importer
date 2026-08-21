@@ -32,6 +32,14 @@ def iter_csv_rows(csv_path: Path, chunk_size: int = 500) -> Iterator[list[dict]]
             yield chunk
 
 
+def count_csv_rows(csv_path: Path) -> int:
+    """Cheap upfront row count (one pass, no full-file load) for progress reporting."""
+    with csv_path.open(newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        next(reader, None)  # header
+        return sum(1 for _ in reader)
+
+
 def import_signal(
     client: W4HClient,
     dataset_id: str,
@@ -59,7 +67,25 @@ def import_signal(
     total_skipped = 0
     last_physical = None
 
-    for chunk in iter_csv_rows(csv_path):
+    # Upfront row count for progress reporting only — a chunked import against
+    # the full bundled sample data can legitimately take a long time with no
+    # feedback otherwise, which is easy to mistake for a hang. If counting
+    # fails for any reason, fall back to unnumbered progress rather than
+    # failing the import over a cosmetic feature.
+    try:
+        total_rows = count_csv_rows(csv_path)
+    except OSError:
+        total_rows = None
+
+    import_chunk_size = 500
+    total_chunks = (
+        -(-total_rows // import_chunk_size) if total_rows else None
+    )  # ceiling division
+
+    rows_done = 0
+    chunk_index = 0
+    for chunk in iter_csv_rows(csv_path, chunk_size=import_chunk_size):
+        chunk_index += 1
         payload = {
             "signal": slug,
             "mode": mode if total_inserted == 0 and total_skipped == 0 else "append",
@@ -80,6 +106,20 @@ def import_signal(
             "physical_schema": result.get("physical_schema"),
             "physical_table": result.get("physical_table"),
         }
+
+        rows_done += len(chunk)
+        if total_rows:
+            print(
+                f"{slug}: chunk {chunk_index}/{total_chunks} "
+                f"({rows_done}/{total_rows} rows, inserted={total_inserted} skipped={total_skipped})",
+                flush=True,
+            )
+        else:
+            print(
+                f"{slug}: chunk {chunk_index} ({rows_done} rows so far, "
+                f"inserted={total_inserted} skipped={total_skipped})",
+                flush=True,
+            )
 
     return {
         "signal": slug,
