@@ -69,12 +69,15 @@ def import_signal(
 
     # Upfront row count for progress reporting only — a chunked import against
     # the full bundled sample data can legitimately take a long time with no
-    # feedback otherwise, which is easy to mistake for a hang. If counting
-    # fails for any reason, fall back to unnumbered progress rather than
-    # failing the import over a cosmetic feature.
+    # feedback otherwise, which is easy to mistake for a hang. This is a
+    # cheap line-iteration pass (no dict construction, no import), not a
+    # second full parse, but it is still a second read of the file — if
+    # counting fails for any reason (I/O error, malformed CSV), fall back to
+    # unnumbered progress rather than failing the import over a cosmetic
+    # feature.
     try:
         total_rows = count_csv_rows(csv_path)
-    except OSError:
+    except (OSError, csv.Error, UnicodeDecodeError):
         total_rows = None
 
     import_chunk_size = 500
