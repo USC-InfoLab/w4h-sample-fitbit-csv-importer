@@ -40,6 +40,14 @@ Never commit `.env` or paste keys into notebook outputs.
 pip install -e ".[dev]"
 ```
 
+## One-command run (`run.sh`)
+
+```bash
+./run.sh import          # or: ./run.sh sync --signal weight --file ...
+```
+
+Bootstraps a local `.venv`, installs this package, and runs the CLI. If `W4H_API_KEY` isn't already set in your environment, it prompts for it (and the API base URL) interactively and offers to save both to `.env`. Set `W4H_API_KEY`/`W4H_API_BASE` in the environment beforehand to run it non-interactively — this is the same entrypoint the in-app "Run" trigger uses.
+
 ## Notebook (primary)
 
 Open [`notebook/import_fitbit_csv.ipynb`](notebook/import_fitbit_csv.ipynb). It loads `manifest.yaml` from the sample repo, shows GeoMTS mapping, and posts chunked rows to `POST /datasets/:id/import/csv-batch`.

@@ -46,7 +46,13 @@ def main(argv: list[str] | None = None) -> int:
         for r in results:
             print(
                 f"{r['signal']}: inserted={r['inserted']} skipped={r['skipped']} "
-                f"→ {r.get('physical_schema')}.{r.get('physical_table')}"
+                f"misfits={r.get('misfits', 0)} → {r.get('physical_schema')}.{r.get('physical_table')}"
+            )
+        total_misfits = sum(r.get("misfits", 0) for r in results)
+        if total_misfits:
+            print(
+                f"\n{total_misfits} vendor-spec misfit(s) found across this import — "
+                "see per-signal detail above. Rows were still imported; this is a report, not a rejection."
             )
         return 0
 
@@ -59,7 +65,8 @@ def main(argv: list[str] | None = None) -> int:
             csv_path = Path(args.file).resolve()
         result = sync_signal(client, args.dataset_id, signal, package_root, csv_path=csv_path)
         print(
-            f"sync {result['signal']}: inserted={result['inserted']} skipped={result['skipped']}"
+            f"sync {result['signal']}: inserted={result['inserted']} skipped={result['skipped']} "
+            f"misfits={result.get('misfits', 0)}"
         )
         return 0
 
