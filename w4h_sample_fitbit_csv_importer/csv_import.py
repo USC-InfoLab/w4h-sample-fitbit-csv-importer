@@ -68,8 +68,10 @@ def import_signal(
         raise FileNotFoundError(f"Sample CSV missing: {csv_path}")
 
     columns = signal.get("columns", [])
-    mapping = signal.get("geomts_mapping")
+    mapping = dict(signal.get("geomts_mapping") or {})
     sampling_interval = signal.get("sampling_interval")
+    if sampling_interval:
+        mapping["sampling_interval"] = sampling_interval
     description = signal.get("description", "")
     source_url = signal.get("fitbit_api_url")
     source_name = "Fitbit"
