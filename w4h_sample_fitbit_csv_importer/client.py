@@ -18,6 +18,17 @@ class W4HClient:
             }
         )
 
+    def list_datasets(self) -> list[dict]:
+        """Datasets the API key can see (GET /datasets)."""
+        resp = self.session.get(f"{self.base_url}/datasets", timeout=30)
+        resp.raise_for_status()
+        payload = resp.json()
+        if isinstance(payload, list):
+            return payload
+        if isinstance(payload, dict):
+            return payload.get("datasets") or payload.get("data") or []
+        return []
+
     def import_csv_batch(self, dataset_id: str, payload: dict) -> dict:
         url = f"{self.base_url}/datasets/{dataset_id}/import/csv-batch"
         resp = self.session.post(url, json=payload, timeout=120)

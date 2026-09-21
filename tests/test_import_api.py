@@ -9,7 +9,9 @@ from w4h_sample_fitbit_csv_importer.client import W4HClient
 def test_import_subjects_batch():
     if not os.environ.get("W4H_API_KEY", "").strip():
         pytest.skip("W4H_API_KEY not set")
-    dataset_id = os.environ.get("W4H_DATASET_ID", "sample-fitbit-csv")
+    dataset_id = os.environ.get("W4H_DATASET_ID", "").strip()
+    if not dataset_id:
+        pytest.skip("W4H_DATASET_ID not set")
     client = W4HClient()
     result = client.import_csv_batch(
         dataset_id,

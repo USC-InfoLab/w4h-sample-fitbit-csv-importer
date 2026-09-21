@@ -37,6 +37,8 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     args = parser.parse_args(argv)
+    if not args.dataset_id:
+        parser.error("--dataset-id is required (in-app Run passes it in the process environment)")
     package_root = sample_package_path()
     manifest = load_manifest(package_root)
     client = W4HClient()

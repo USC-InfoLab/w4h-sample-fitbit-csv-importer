@@ -32,4 +32,5 @@ def sample_package_path() -> Path:
 
 
 def dataset_id() -> str:
-    return os.environ.get("W4H_DATASET_ID", "sample-fitbit-csv").strip()
+    """Id from the process environment (in-app Run). Empty if unset — do not default."""
+    return os.environ.get("W4H_DATASET_ID", "").strip()

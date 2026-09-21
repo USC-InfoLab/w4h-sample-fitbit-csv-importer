@@ -29,7 +29,7 @@ W4H/
 
 ```bash
 cp .env.example .env
-# Edit .env — set W4H_API_KEY (and W4H_DATASET_ID)
+# Edit .env — set W4H_API_KEY
 ```
 
 Never commit `.env` or paste keys into notebook outputs.
@@ -50,7 +50,7 @@ Bootstraps a local `.venv`, installs this package, and runs the CLI. If `W4H_API
 
 ## Notebook (primary)
 
-Open [`notebook/import_fitbit_csv.ipynb`](notebook/import_fitbit_csv.ipynb). It loads `manifest.yaml` from the sample repo, shows GeoMTS mapping, and posts chunked rows to `POST /datasets/:id/import/csv-batch`.
+Open [`notebook/import_fitbit_csv.ipynb`](notebook/import_fitbit_csv.ipynb). It lists datasets via `GET /datasets`, loads `manifest.yaml` from the sample repo, and posts chunked rows to `POST /datasets/:id/import/csv-batch`.
 
 Admins: run the import cells against a dataset you created.  
 Users: run through mapping/preview; skip `mode="replace"` on W4H Samples.
